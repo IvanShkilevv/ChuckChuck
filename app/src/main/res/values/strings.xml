@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Chuck Chuck</string>
+    <string name="edit_text_hint">Count</string>
+    <string name="reload_button_text">Reload</string>
+    <string name="jokes_screen">Jokes</string>
+    <string name="api_info_screen">API Info</string>
+    <string name="snackbar_no_internet_connection">Нет интернет соединения</string>
+
 </resources>

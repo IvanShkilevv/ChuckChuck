@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_jokes"
+        android:icon="@drawable/outline_mood_white_24"
+        android:title="@string/jokes_screen" />
+
+    <item
+        android:id="@+id/navigation_api_info"
+        android:icon="@drawable/outline_public_white_24"
+        android:title="@string/api_info_screen" />
+
+</menu>
