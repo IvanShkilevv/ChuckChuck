@@ -19,13 +19,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/input_text_view"
+        android:id="@+id/count_edit_text_view"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
         android:hint="@string/edit_text_hint"
-        android:inputType="text"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="@+id/recycler_view_jokes"
         app:layout_constraintStart_toStartOf="@+id/recycler_view_jokes"
         app:layout_constraintTop_toBottomOf="@+id/recycler_view_jokes" />
@@ -38,9 +38,9 @@
         android:background="@color/colorAccent"
         android:fontFamily="sans-serif"
         android:text="@string/reload_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/input_text_view"
-        app:layout_constraintStart_toStartOf="@+id/input_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/input_text_view" />
+        app:layout_constraintEnd_toEndOf="@+id/count_edit_text_view"
+        app:layout_constraintStart_toStartOf="@+id/count_edit_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/count_edit_text_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

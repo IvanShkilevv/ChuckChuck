@@ -4,8 +4,10 @@
     <string name="reload_button_text">Reload</string>
     <string name="jokes_screen">Jokes</string>
     <string name="api_info_screen">API Info</string>
-    <string name="no_internet_connection">No internet connection</string>
+    <string name="no_internet_connection">No internet connection...</string>
     <string name="server_respond_error">Error, please try again later</string>
     <string name="conversion_issue">Retrofit conversion issue</string>
+    <string name="empty_user_input">Please, input how many jokes you want!</string>
+    <string name="above_jokes_limit">Wow! That\'s too many jokes at once! Try a million </string>
 
 </resources>
