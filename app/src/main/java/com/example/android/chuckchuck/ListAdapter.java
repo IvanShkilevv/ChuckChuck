@@ -10,9 +10,9 @@ import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
 
-    private List <String> jokesList;
+    private List <Joke> jokesList;
 
-    public ListAdapter(List <String> jokesList) {
+    public ListAdapter(List <Joke> jokesList) {
         this.jokesList = jokesList;
     }
 
@@ -31,7 +31,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Displaying list item to it's correct position
-        String joke = jokesList.get(position);
+        String joke = jokesList.get(position).getJokeText();
         TextView textView = holder.jokeText;
         textView.setText(joke);
     }
