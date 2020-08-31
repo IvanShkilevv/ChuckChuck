@@ -8,19 +8,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class JokesFragment extends Fragment {
+    private static final String LOG_TAG = JokesFragment.class.getSimpleName();
     private Context context;
     private RecyclerView recyclerView;
 
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -58,16 +65,45 @@ public class JokesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view_jokes);
 
-        ArrayList <String> tempJokesList = new ArrayList<>();
-        tempJokesList.add("First joke");
-        tempJokesList.add("Second joke");
-        tempJokesList.add("Third joke");
+//        ArrayList <String> tempJokesList = new ArrayList<>();
+//        tempJokesList.add("First joke");
+        int userInputJokesQuantity = 5;
+        loadDataFromAPI(userInputJokesQuantity);
 
-        ListAdapter adapter = new ListAdapter(tempJokesList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    private void loadDataFromAPI(int userInputJokesQuantity) {
+        ChuckJokesAPI chuckJokesAPI = RetrofitClient.getRetrofitInstance().create(ChuckJokesAPI.class);
+        Call<List<Joke>> call = chuckJokesAPI.loadJokes(userInputJokesQuantity);
+        call.enqueue(new Callback<List<Joke>>() {
+            @Override
+            public void onResponse(Call<List<Joke>> call, Response<List<Joke>> response) {
+                List <Joke> jokesList = response.body();
+                //updating UI
+                updateRecyclerView(jokesList);
+            }
+
+            @Override
+            public void onFailure(Call<List<Joke>> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Toast.makeText(context, "network failure :( inform the user and possibly retry", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(context, "conversion issue", Toast.LENGTH_SHORT).show();
+                    String stackTrace = Log.getStackTraceString(t);
+                    Log.e(LOG_TAG, stackTrace);
+                }
+//                Toast.makeText(context, R.string.server_respond_error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateRecyclerView (List <Joke> jokesList) {
+        ListAdapter adapter = new ListAdapter(jokesList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

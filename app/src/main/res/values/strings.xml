@@ -4,6 +4,7 @@
     <string name="reload_button_text">Reload</string>
     <string name="jokes_screen">Jokes</string>
     <string name="api_info_screen">API Info</string>
-    <string name="snackbar_no_internet_connection">Нет интернет соединения</string>
+    <string name="no_internet_connection">Нет интернет соединения</string>
+    <string name="server_respond_error">Ошибка. Пожалуйста, попробуйте еще раз позже ;)</string>
 
 </resources>

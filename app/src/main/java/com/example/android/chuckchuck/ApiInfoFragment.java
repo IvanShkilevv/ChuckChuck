@@ -1,28 +1,24 @@
 package com.example.android.chuckchuck;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.google.android.material.snackbar.Snackbar;
 
 
 public class ApiInfoFragment extends Fragment {
     private Context context;
     private static final String URL = "http://www.icndb.com/api/";
     private WebView webView;
+    private ProgressBar progressBar;
     // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -58,19 +54,7 @@ public class ApiInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_api_info, container, false);
-        webView = view.findViewById(R.id.web_view);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-
-        NetworkConnection network = new NetworkConnection(context);
-
-        if (network.checkNetworkConnection()) {
-            webView.loadUrl(URL);
-        }
-        else {
-            Toast.makeText(context, R.string.snackbar_no_internet_connection, Toast.LENGTH_LONG).show();
-        }
+        updateWebView(view);
 
         return view;
     }
@@ -85,6 +69,22 @@ public class ApiInfoFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         context = null;
+    }
+
+    private void updateWebView (View view) {
+        webView = view.findViewById(R.id.web_view);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+
+        NetworkConnection network = new NetworkConnection(context);
+
+        if (network.checkNetworkConnection()) {
+            webView.loadUrl(URL);
+        }
+        else {
+            Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+        }
     }
 
 
