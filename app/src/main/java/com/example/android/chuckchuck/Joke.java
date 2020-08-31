@@ -1,9 +1,7 @@
 package com.example.android.chuckchuck;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Joke {
-    @SerializedName("joke")
+
     private String jokeText;
 
     public Joke(String jokeText) {
@@ -14,7 +12,4 @@ public class Joke {
         return jokeText;
     }
 
-    public void setJokeText(String jokeText) {
-        this.jokeText = jokeText;
-    }
 }

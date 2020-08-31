@@ -14,37 +14,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.android.chuckchuck.retrofit_pojo.ApiRespondSchema;
+import com.example.android.chuckchuck.retrofit_pojo.Value;
+
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class JokesFragment extends Fragment {
     private static final String LOG_TAG = JokesFragment.class.getSimpleName();
     private Context context;
     private RecyclerView recyclerView;
-
-    // TODO: Rename parameter arguments, choose names that match
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private List <Joke> jokesList = new ArrayList<>();
+    private List<Value> valuesList;
 
     public JokesFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static JokesFragment newInstance(String param1, String param2) {
         JokesFragment fragment = new JokesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+//      input Bundle args here if needed
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,10 +51,7 @@ public class JokesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -65,37 +61,47 @@ public class JokesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view_jokes);
 
-//        ArrayList <String> tempJokesList = new ArrayList<>();
-//        tempJokesList.add("First joke");
-        int userInputJokesQuantity = 5;
+        //temp int instead of user input
+        int userInputJokesQuantity = 100;
         loadDataFromAPI(userInputJokesQuantity);
-
 
         return view;
     }
 
     private void loadDataFromAPI(int userInputJokesQuantity) {
-        ChuckJokesAPI chuckJokesAPI = RetrofitClient.getRetrofitInstance().create(ChuckJokesAPI.class);
-        Call<List<Joke>> call = chuckJokesAPI.loadJokes(userInputJokesQuantity);
-        call.enqueue(new Callback<List<Joke>>() {
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        RequestService requestService = retrofit.create(RequestService.class);
+        Call<ApiRespondSchema> call = requestService.loadJokes(userInputJokesQuantity);
+
+        call.enqueue(new Callback<ApiRespondSchema>() {
             @Override
-            public void onResponse(Call<List<Joke>> call, Response<List<Joke>> response) {
-                List <Joke> jokesList = response.body();
-                //updating UI
+            public void onResponse(@NonNull Call<ApiRespondSchema> call, @NonNull Response<ApiRespondSchema> response) {
+                try {
+                    if (response.body() != null) {
+                        valuesList = response.body().getValue();
+                    }
+
+                    for (Value value : valuesList) {
+                        String rawJokeText = value.getJoke();
+                        String jokeText = StringEscapeUtils.unescapeHtml4(rawJokeText);
+                        jokesList.add(new Joke(jokeText));
+                    }
+                } catch (NullPointerException exception) {
+                    String stackTrace = Log.getStackTraceString(exception);
+                    Log.e(LOG_TAG, stackTrace);
+                }
                 updateRecyclerView(jokesList);
             }
 
             @Override
-            public void onFailure(Call<List<Joke>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiRespondSchema> call,@NonNull Throwable t) {
                 if (t instanceof IOException) {
-                    Toast.makeText(context, "network failure :( inform the user and possibly retry", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.server_respond_error, Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(context, "conversion issue", Toast.LENGTH_SHORT).show();
                     String stackTrace = Log.getStackTraceString(t);
-                    Log.e(LOG_TAG, stackTrace);
+                    Log.e(LOG_TAG + R.string.conversion_issue, stackTrace);
                 }
-//                Toast.makeText(context, R.string.server_respond_error, Toast.LENGTH_LONG).show();
             }
         });
     }
