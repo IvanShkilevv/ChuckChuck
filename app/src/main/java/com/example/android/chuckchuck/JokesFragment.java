@@ -48,16 +48,24 @@ public class JokesFragment extends Fragment {
 
     public static JokesFragment newInstance(String param1, String param2) {
         JokesFragment fragment = new JokesFragment();
-        Bundle args = new Bundle();
-//      input Bundle args here if needed
-        fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        context = null;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -126,18 +134,6 @@ public class JokesFragment extends Fragment {
         ListAdapter adapter = new ListAdapter(jokesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        context = null;
     }
 
     private boolean checkNetwork() {

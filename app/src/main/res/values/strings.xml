@@ -9,5 +9,4 @@
     <string name="conversion_issue">Retrofit conversion issue</string>
     <string name="empty_user_input">Please, input how many jokes you want!</string>
     <string name="above_jokes_limit">Wow! That\'s too many jokes at once! Try a million </string>
-
 </resources>
