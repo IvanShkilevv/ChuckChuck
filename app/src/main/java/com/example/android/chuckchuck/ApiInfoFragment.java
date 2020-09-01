@@ -1,6 +1,8 @@
 package com.example.android.chuckchuck;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,13 +50,16 @@ public class ApiInfoFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_api_info, container, false);
+
+        webView = view.findViewById(R.id.web_view);
+        progressBar = view.findViewById(R.id.progress_bar);
+
         updateWebView(view);
 
         return view;
@@ -72,7 +78,7 @@ public class ApiInfoFragment extends Fragment {
     }
 
     private void updateWebView (View view) {
-        webView = view.findViewById(R.id.web_view);
+        webView.setWebViewClient(new FragmentWebViewClient());
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setBuiltInZoomControls(true);
@@ -87,5 +93,23 @@ public class ApiInfoFragment extends Fragment {
         }
     }
 
+    public class FragmentWebViewClient extends WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+        }
+    }
 
 }
+
+
